@@ -2,4 +2,13 @@
 
 {% block body %}
 	<h1>Home Page</h1>
+	
+	{% for row in rows %}
+	<table>
+		<tr>
+			<td>{{row["id"]}}</td>
+			<td>{{row["name"]}}</td>
+		</tr>
+	</table>
+	{% endfor %}
 {% endblock %}

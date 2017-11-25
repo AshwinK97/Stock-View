@@ -1,18 +1,18 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, logging
 from flaskext.mysql import MySQL
+import sqlite3 as sql
 
-app = Flask(__name__, template_folder='templates', static_folder='static')
-mysql = MySQL()
-# MySQL configuration
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'ashwin'
-app.config['MYSQL_DATABASE_DB'] = 'flaskapp'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost:3306'
-mysql.init_app(app)
+app = Flask(__name__)
 
 @app.route('/')
 def home():
-	return render_template('homepage.html')
+	con = sql.connect("db/database.db")
+	con.row_factory = sql.Row
+
+	cur = con.cursor()
+	cur.execute("select * from tickers")
+	rows = cur.fetchall();
+	return render_template("homepage.html",rows = rows)
 
 @app.route('/about')
 def about():
