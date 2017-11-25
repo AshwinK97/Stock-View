@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-	<h1>Error 404: Page not found</h1>
+<h1>Error 404: Page not found</h1>
+<img src="{{ url_for('static', filename='img/notfound.png') }}">
 {% endblock %}
