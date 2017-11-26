@@ -82,17 +82,9 @@ def view1():
 
 	return render_template("view1.html", tables = tables, ids = ids, graphJSON = graphJSON)
 
-# @app.route('/stock/<int:ticker>')
-# def stock(ticker):
-# 	info = select("select name, company from Tickers where id = ?", [ticker])
-# 	rows = select("select * from prices where ticker_id = ? order by price_id asc", [ticker])
-# 	return render_template("stock.html", rows = rows, info = info)
-
 @app.route('/stock/<int:ticker>')
 def stock(ticker):
-	#ticker_info = select("select name, company from Tickers where id = ?", ticker)
-
-	price_select_all = select("select * from prices where ticker_id = ? order by price_id asc", [ticker])
+	price_select_all = select("select date, open, high, low, close, volume from Prices where ticker_id = ? order by price_id asc", [ticker])
 
 	price_rows = price_select_all.fetchall()
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
