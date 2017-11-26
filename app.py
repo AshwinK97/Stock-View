@@ -33,13 +33,13 @@ def graph(ticker):
 		where Prices.ticker_id = ?
 		order by price_id ASC''', [ticker])
 
-	columns = list(map(lambda col: col[0], cur.description))
 	rows = cur.fetchall();
-	
+	columns = list(map(lambda col: col[0], cur.description))
+
 	df = pd.DataFrame(rows)
 	df.columns = columns
 	
-	tables = [df.head(25).to_html(classes='pure-table')]
+	tables = [df.head(10).to_html(classes='pure-table', index=False)]
 
 	graphs = [{
 		"data": [{
@@ -74,7 +74,7 @@ def graph(ticker):
 	# objects to their JSON equivalents
 	graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
-	return render_template("graph.html", tables = tables, ids = ids, graphJSON = graphJSON)
+	return render_template("graph.html", tables = tables, ids = ids, graphJSON = graphJSON, name = df.name[0])
 
 @app.route('/stock/<int:ticker>')
 def stock(ticker):

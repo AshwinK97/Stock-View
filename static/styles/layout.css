@@ -53,3 +53,10 @@ h1, h2 {
     color: white;
     text-decoration: none;
 }
+.rule {
+    margin: 10px 0;
+    border: none;
+    height: 1.5px;
+    background-image: -webkit-linear-gradient(left, #f0f0f0, #c9bbae, #f0f0f0);
+    background-image: linear-gradient(left, #f0f0f0, #c9bbae, #f0f0f0);
+  }
