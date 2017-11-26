@@ -11,15 +11,16 @@ def select(query, params):
 	con = sql.connect("db/database.db")
 	con.row_factory = sql.Row
 	cur = con.cursor()
-	try:
-		cur.execute(query, params)
-		return cur
-	except:
-		return "error: could not select"
+	# try:
+	# 	cur.execute(query, params)
+	# 	return cur
+	# except:
+	# 	return "error: could not return cursor"
+	return cur.execute(query, params)
 
 @app.route('/')
 def home():
-	return render_template("homepage.html", rows = select("select * from tickers", []).fetchall())
+	return render_template("homepage.html", rows = select("select * from Tickers", []).fetchall())
 
 @app.route('/about')
 def about():
@@ -73,20 +74,21 @@ def graph(ticker):
 	# objects to their JSON equivalents
 	graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
-	return render_template("view1.html", tables = tables, ids = ids, graphJSON = graphJSON)
+	return render_template("graph.html", tables = tables, ids = ids, graphJSON = graphJSON)
 
 @app.route('/stock/<int:ticker>')
 def stock(ticker):
-	price_select_all = select("select date, open, high, low, close, volume from Prices where ticker_id = ? order by price_id asc", [ticker])
+	# price_select_all = select("select date, open, high, low, close, volume from Prices where ticker_id = ? order by price_id asc", [ticker])
 
-	price_rows = price_select_all.fetchall()
-	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
+	# price_rows = price_select_all.fetchall()
+	# price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
 
-	price = pd.DataFrame(price_rows)
-	price.columns = price_columns
+	# price = pd.DataFrame(price_rows)
+	# price.columns = price_columns
 
-	#info = pd.DataFrame(ticker_info)
-	return render_template("stock.html", table = price.to_html(classes='pure-table', index=False), info = {"company": 'Google', "name": 'GOOGL'})
+	ticker_info = select("select id, name, company from Tickers where id = 1", "").fetchall()
+	# return render_template("stock.html", table = price.to_html(classes='pure-table', index=False), info = ticker_info)
+	return render_template("stock.html", ticker_info = ticker_info)
 
 @app.errorhandler(404)
 def page_not_found(e):
