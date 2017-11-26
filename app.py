@@ -60,7 +60,8 @@ def graph(ticker):
 				"t": 25, 
 				"b": 40, 
 				"l": 60
-			}
+			},
+			"showlegend": False
 		}
 	}]
 
