@@ -82,7 +82,7 @@ def view1():
 
 	return render_template("view1.html", tables = tables, ids = ids, graphJSON = graphJSON)
 
-@app.route('/stock/<ticker>')
+@app.route('/stock/<int:ticker>')
 def stock(ticker):
 	#ticker_info = select("select name, company from Tickers where id = ?", ticker)
 	price_select_all = select("select * from prices where ticker_id = ? order by price_id asc", ticker)
