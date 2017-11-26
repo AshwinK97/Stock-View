@@ -1,28 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-	<h1>{{info[0]["company"]}}</h1>
-	<h2>{{info[0]["name"]}}</h2>
+	<h1>{{info["company"]}}</h1>
+	<h2>{{info["name"]}}</h2>
 
-	<table id="stock-table">
-		<tr>
-			<th>date</th>
-			<th>open</th>
-			<th>high</th>
-			<th>low</th>
-			<th>close</th>
-			<th>volume</th>
-		</tr>
-	{% for row in rows %}
-		<tr>
-			<td>{{row["date"]}}</td>
-			<td>{{row["open"]}}</td>
-			<td>{{row["high"]}}</td>
-			<td>{{row["low"]}}</td>
-			<td>{{row["close"]}}</td>
-			<td>{{row["volume"]}}</td>
-		</tr>
-	{% endfor %}
-	</table>
+	{{ table|safe }}
 	
 {% endblock %}
