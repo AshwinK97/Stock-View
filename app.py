@@ -19,26 +19,19 @@ def select(query, params):
 
 @app.route('/')
 def home():
-	return render_template("homepage.html", rows = select("select * from tickers", []))
+	return render_template("homepage.html", rows = select("select * from tickers", []).fetchall())
 
 @app.route('/about')
 def about():
 	return render_template('about.html')
 
 ## move to seperate file
-@app.route('/view1')
-def view1():
-	con = sql.connect("db/database.db")
-	con.row_factory = sql.Row
-
-	cur = con.cursor()
-	cur.execute('''
-	select Tickers.name, Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
-	from Prices 
-	join Tickers on Tickers.id = Prices.ticker_id
-	where Prices.ticker_id = 1
-	order by price_id ASC
-	''')
+@app.route('/graph/<int:ticker>')
+def graph(ticker):
+	cur = select('''select Tickers.name, Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
+		from Prices join Tickers on Tickers.id = Prices.ticker_id
+		where Prices.ticker_id = ?
+		order by price_id ASC''', [ticker])
 
 	columns = list(map(lambda col: col[0], cur.description))
 	rows = cur.fetchall();
