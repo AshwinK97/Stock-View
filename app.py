@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-from flaskext.mysql import MySQL
 import sqlite3 as sql
 
 app = Flask(__name__)
