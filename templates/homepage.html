@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-	<form action="">
+	<form action="/compare" method="GET">
 		<div class="section">
 			<h1>View Stocks</h1>
 
@@ -11,9 +11,6 @@
 						<td>
 							<a href="/stock/{{row['id']}}">{{row["company"]}} - {{row["name"]}}</a>
 						</td>
-						<!--<td>
-							<input type="checkbox" name={{row["name"]}} id={{row["id"]}} class="pure-checkbox">
-						</td>-->
 					</tr>
 				{% endfor %}
 			</table>
