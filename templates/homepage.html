@@ -3,13 +3,12 @@
 {% block body %}
 	<h1>Home Page</h1>
 
-	{% for row in rows %}
-	<table>
-		<tr>
-			<td>{{row["id"]}}</td>
-			<td>{{row["name"]}}</td>
-		</tr>
-	</table>
+	{% for id in ids %}
+	<div id="{{id}}"></div>
+	{% endfor %}
+
+	{% for table in tables %}
+	{{ table|safe }}
 	{% endfor %}
 	
 {% endblock %}
