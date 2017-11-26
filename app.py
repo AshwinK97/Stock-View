@@ -1,8 +1,10 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template
 from flaskext.mysql import MySQL
 import sqlite3 as sql
 
 app = Flask(__name__)
+
+# https://www.quandl.com/api/v1/datasets/WIKI/AAPL.csv?column=4&sort_order=asc&collapse=quarterly&trim_start=2012-01-01&trim_end=2013-12-31
 
 @app.route('/')
 def home():
