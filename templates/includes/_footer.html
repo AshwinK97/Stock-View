@@ -1,44 +1,41 @@
-<footer>
-	<table class="footer-table">
-		<tr>
-			<th>Links</th>
-			<th>Resources</th>
-			<th>Group Members</th>
-		</tr>
-		<tr>
-			<td><a class="footer-link" href="https://github.com/AshwinK97/SOFE3700-FinalProject">github repository</a></td>
-			<td><a class="footer-link" href="#">python-flask</a></td>
-			<td><a class="footer-link" href="#">Jasindan Rasalingam</td>
-		</tr>
-		<tr>
-			<td><a class="footer-link" href="#">somethingidk</a></td>
-			<td><a class="footer-link" href="#">sqlite3</td>
-			<td><a class="footer-link" href="#">Darron Singh</td>
-		</tr>
-		<tr>
-			<td><a class="footer-link" href="#">somethingelse</a></td>
-			<td><a class="footer-link" href="#">plotly</td>
-			<td><a class="footer-link" href="#">Kashal Patel</td>
-		</tr>
-		<tr>
-			<td><a class="footer-link" href="#">somethingelse</a></td>
-			<td><a class="footer-link" href="#">Quandl API</td>
-			<td><a class="footer-link" href="#">Ashwin Kamalakannan</td>
-		</tr>
-	</table>
+<div id="footer">
+	<ul class="left">
+		<li class="footer-header">Links</li>
+		<li><a class="footer-link" href="https://github.com/AshwinK97/SOFE3700-FinalProject">github repository</a></li>
+		<li><a class="footer-link" href="#">somethingidk</a></li>
+		<li><a class="footer-link" href="#">somethingidk</a></li>
+		<li><a class="footer-link" href="#">somethingidk</a></li>
+	</ul>
+	<ul class="right">
+		<li class="footer-header">Group Members</li>
+		<li><a class="footer-link" href="https://github.com/jasindan97">Jasindan Rasalingam</a></li>
+		<li><a class="footer-link" href="https://github.com/DarronSingh">Darron Singh</a></li>
+		<li><a class="footer-link" href="https://github.com/Artemis854">Kashal Patel</a></li>
+		<li><a class="footer-link" href="https://github.com/AshwinK97">Ashwin Kamalakannan</a></li>
+	</ul>
+	<ul class="center">
+		<li class="footer-header">Resources</li>
+		<li><a class="footer-link" href="http://flask.pocoo.org/">python-flask</a></li>
+		<li><a class="footer-link" href="https://www.sqlite.org/">sqlite3</a></li>
+		<li><a class="footer-link" href="https://plot.ly/">plotly</a></li>
+		<li><a class="footer-link" href="https://www.quandl.com/tools/api">Quandl API</a></li>
+	</ul>
+	<div id="legal">
+		Copyright © 2017 SOFE3700. All rights reserved.
+	</div>
+</div>
 
-	<!-- D3.js -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-	<!-- jQuery -->
-	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-	<!-- Plotly.js -->
-	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<!-- D3.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<!-- Plotly.js -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-	<script type="text/javascript">
-		var graphs = {{graphJSON | safe}};
-		var ids = {{ids | safe}};
-		for(var i in graphs) {
-			Plotly.plot(ids[i], graphs[i].data, graphs[i].layout);
-		}
-	</script>
-</footer>
+<script type="text/javascript">
+	var graphs = {{graphJSON | safe}};
+	var ids = {{ids | safe}};
+	for(var i in graphs) {
+		Plotly.plot(ids[i], graphs[i].data, graphs[i].layout);
+	}
+</script>
