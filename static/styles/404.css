@@ -1,0 +1,10 @@
+body {
+	text-align: center;
+}
+img {
+	width: 300px;
+}
+a {
+	float: left;
+	margin-left: 30%;
+}

@@ -1,4 +1,4 @@
-ul {
+#nav {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -6,11 +6,11 @@ ul {
     background-color: #333;
 }
 
-li {
+.nav-item {
     float: left;
 }
 
-li a {
+.nav-link {
     display: block;
     color: white;
     text-align: center;
@@ -18,7 +18,7 @@ li a {
     text-decoration: none;
 }
 
-a:hover:not(.active) {
+.nav-link:hover:not(.active) {
     background-color: #111;
 }
 

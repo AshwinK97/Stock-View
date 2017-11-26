@@ -3,9 +3,14 @@
 <head>
 	<title>Flask App</title>
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/nav.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/layout.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/footer.css') }}">
 </head>
 <body>
 	{% include 'includes/_nav.html' %}
-	{% block body %}{% endblock %}
+	<div id="wrapper">
+		{% block body %}{% endblock %}
+	</div>
+	{% include 'includes/_footer.html' %}
 </body>
 </html>

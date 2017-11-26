@@ -1,0 +1,31 @@
+footer {
+	position: relative;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin-top: 10%;
+	background-color: #efefef;
+	text-align: center;
+}
+
+.footer-table {
+	width: 100%;
+}
+
+.footer-item {}
+
+.footer-link {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+.footer-link:hover:not(.active) {
+    text-decoration: underline;
+}
+
+.active {
+	background-color:#4CAF50;
+}
