@@ -13,9 +13,9 @@ def select(query, params):
 	cur = con.cursor()
 	try:
 		cur.execute(query, params)
+		return cur
 	except:
 		return "error: could not select"
-	return cur.fetchall();
 
 @app.route('/')
 def home():
