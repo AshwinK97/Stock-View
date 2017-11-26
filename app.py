@@ -87,7 +87,7 @@ def stock(ticker):
 
 	ticker_info = select("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
 
-	return render_template("stock.html", table = price.to_html(classes='pure-table', index=False), info = ticker_info)
+	return render_template("stock.html", table = price.to_html(classes='pure-table pure-table-bordered', index=False), info = ticker_info)
 	#return render_template("stock.html", info = ticker_info)
 
 @app.errorhandler(404)

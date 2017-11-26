@@ -3,7 +3,11 @@
 {% block body %}
 	<h1>{{ info["company"] }}</h1>
 	<h2>{{ info["name"] }} </h2>
-	<a href="/graph/{{info['id']}}">see graph</a>
-	{{ table|safe }}
+	<a href="/graph/{{info['id']}}">
+		<div class="pure-button">Go To Graph</div>
+	</a>
+	<div id="stock-table">
+		{{ table|safe }}
+	</div>
 	
 {% endblock %}
