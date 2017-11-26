@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 import sqlite3 as sql
+from sqlite3 import Error
 import json, plotly
 import numpy as np
 import pandas as pd
@@ -11,12 +12,12 @@ def select(query, params):
 	con = sql.connect("db/database.db")
 	con.row_factory = sql.Row
 	cur = con.cursor()
-	# try:
-	# 	cur.execute(query, params)
-	# 	return cur
-	# except:
-	# 	return "error: could not return cursor"
-	return cur.execute(query, params)
+	try:
+		cur.execute(query, params)
+		return cur
+	except Error as e:
+		print(e)
+		return "error: could not return cursor"
 
 @app.route('/')
 def home():
@@ -78,17 +79,16 @@ def graph(ticker):
 
 @app.route('/stock/<int:ticker>')
 def stock(ticker):
-	# price_select_all = select("select date, open, high, low, close, volume from Prices where ticker_id = ? order by price_id asc", [ticker])
+	price_select_all = select("select date, open, high, low, close, volume from Prices where ticker_id = ? order by price_id asc", [ticker])
 
-	# price_rows = price_select_all.fetchall()
-	# price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
+	price_rows = price_select_all.fetchall()
+	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
 
-	# price = pd.DataFrame(price_rows)
-	# price.columns = price_columns
+	price = pd.DataFrame(price_rows)
+	price.columns = price_columns
 
-	ticker_info = select("select id, name, company from Tickers where id = 1", "").fetchall()
-	# return render_template("stock.html", table = price.to_html(classes='pure-table', index=False), info = ticker_info)
-	return render_template("stock.html", ticker_info = ticker_info)
+	ticker_info = select("select id, name, company from Tickers where id = ?", [ticker]).fetchone() # only 1 row
+	return render_template("stock.html", table = price.to_html(classes='pure-table', index=False), info = ticker_info)
 
 @app.errorhandler(404)
 def page_not_found(e):
