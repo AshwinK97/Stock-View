@@ -1,5 +1,56 @@
-#wrapper {
-	padding-left: 10%;
-	padding-right: 10%;
+html { 
+	font-family: arial,sans-serif;
+	font-size: 90%;
+}
+
+h1, h2 {
+	margin-left: 2%;
+}
+
+#nav-div {}
+
+#wrapper-div {
+	padding-left: 20%;
+	padding-right: 20%;
 	padding-top: 5%;
+}
+
+#footer-div {
+}
+
+.section {
+	padding-bottom: 5%;
+}
+
+#stock-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    counter-reset: rowNumber;
+}
+
+#stock-table tr {
+	counter-increment: rowNumber;
+}
+
+#stock-table th, td {
+    text-align: left;
+}
+
+#stock-table tr:nth-child(even) {
+	background-color: #cccccc;
+}
+
+#stock-table a {
+	display: block;
+    color: black;
+    text-align: left;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+#stock-table a:hover:not(.active) {
+    background-color: #232f3e;
+    color: white;
+    text-decoration: none;
 }

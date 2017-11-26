@@ -1,7 +1,12 @@
 footer {
 	position: relative;
 	margin-top: 10%;
-	background-color: #efefef;
+	margin-bottom: 0%;
+	padding-left: 20%;
+	padding-right: 20%;
+	padding-top: 2.5%;
+	padding-bottom: 2.5%;
+	background-color: #232f3e;
 	text-align: center;
 }
 
@@ -9,13 +14,18 @@ footer {
 	width: 100%;
 }
 
+.footer-table th {
+	color: white;
+	font-size: 110%;
+}
+
 .footer-item {}
 
 .footer-link {
     display: block;
-    color: black;
+    color: white;
     text-align: center;
-    padding: 10px 16px;
+    padding: 10px 40px;
     text-decoration: none;
 }
 

@@ -3,10 +3,11 @@
 -- https://www.quandl.com/api/v1/datasets/WIKI/AAPL.csv?column=4&sort_order=asc&collapse=quarterly&trim_start=2012-01-01&trim_end=2013-12-31
 
 -- create Tickers table
-CREATE TABLE if not exists Tickers ( 
-	id INT NOT NULL, 
-	name VARCHAR(45) NULL, 
-	PRIMARY KEY (id) 
+CREATE TABLE Tickers ( 
+	id INT NOT NULL,
+	name VARCHAR ( 45 ),
+	company VARCHAR ( 45 ),
+	PRIMARY KEY(id) 
 )
 
 -- new Prices table

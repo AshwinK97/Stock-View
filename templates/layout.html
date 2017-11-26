@@ -7,10 +7,14 @@
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/footer.css') }}">
 </head>
 <body>
-	{% include 'includes/_nav.html' %}
-	<div id="wrapper">
+	<div id="nav-div">
+		{% include 'includes/_nav.html' %}
+	</div>
+	<div id="wrapper-div">
 		{% block body %}{% endblock %}
 	</div>
-	{% include 'includes/_footer.html' %}
+	<div id="footer-div">
+		{% include 'includes/_footer.html' %}
+	</div>
 </body>
 </html>
