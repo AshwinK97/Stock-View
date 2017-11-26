@@ -11,10 +11,11 @@ def select(query, params):
 	con = sql.connect("db/database.db")
 	con.row_factory = sql.Row
 	cur = con.cursor()
-	try:
-		cur.execute(query, params)
-	except:
-		return "error: could not select"
+	# try:
+	# 	cur.execute(query, params)
+	# except:
+	# 	return "error: could not select"
+	cur.execute(query, params)
 	return cur.fetchall();
 
 @app.route('/')
@@ -82,10 +83,10 @@ def view1():
 
 	return render_template("view1.html", tables = tables, ids = ids, graphJSON = graphJSON)
 
-@app.route('/stock/<ticker>')
+@app.route('/stock/<int:ticker>')
 def stock(ticker):
-	info = select("select name, company from Tickers where id = ?", ticker)
-	rows = select("select * from prices where ticker_id = ? order by price_id asc", ticker)
+	info = select("select name, company from Tickers where id = ?", [ticker])
+	rows = select("select * from prices where ticker_id = ? order by price_id asc", [ticker])
 	return render_template("stock.html", rows = rows, info = info)
 
 @app.errorhandler(404)
