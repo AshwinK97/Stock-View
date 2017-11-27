@@ -72,7 +72,7 @@ def compare():
 		# objects to their JSON equivalents
 		graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
-		visible = ""
+		visible = "" # no longer invisible
 
 	tickers = query("select * from Tickers", []).fetchall()
 	return render_template('compare.html', tickers = tickers, ids = ids, graphJSON = graphJSON, visible = visible)
