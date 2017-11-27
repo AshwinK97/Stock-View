@@ -7,7 +7,7 @@ import pandas as pd
 # file imports
 from setup import setup
 
-setup() # run initial setup
+# setup() # run initial setup
 app = Flask(__name__)
 
 # perform insert query
@@ -32,10 +32,17 @@ def about():
 
 @app.route('/compare', methods=['GET'])
 def compare():
-	cmp1, cmp2 = "", ""
-	if request.args:
-		cmp1, cmp2 = request.args.get('compare1'), request.args.get('compare2')
-	return render_template('compare.html', tickers = select("select * from Tickers", []).fetchall(), data = [cmp1, cmp2])
+	visible = "invisible"
+	if len(request.args) == 2:
+		ticker1 = select('select date, close from Prices where ticker_id = ?', [request.args.get('compare1')])
+		ticker2 = select('select date, close from Prices where ticker_id = ?', [request.args.get('compare2')])
+
+		## kaushal's graph
+
+		visible = ""
+
+	tickers = select("select * from Tickers", []).fetchall()
+	return render_template('compare.html', tickers = tickers, visible = visible)
 
 ## move to seperate file
 @app.route('/graph/<int:ticker>')
@@ -56,14 +63,14 @@ def graph(ticker):
 
 	graphs = [{
 		"data": [{
-				"x": df.date.tolist(),
-				"open": df.open.tolist(),
-				"close": df.close.tolist(),
-				"high": df.high.tolist(),
-				"low": df.low.tolist(),
-				"type": 'candlestick',
-				"xaxis": 'Date',
-				"yaxis": 'Price'
+			"x": df.date.tolist(),
+			"open": df.open.tolist(),
+			"close": df.close.tolist(),
+			"high": df.high.tolist(),
+			"low": df.low.tolist(),
+			"type": 'candlestick',
+			"xaxis": 'Date',
+			"yaxis": 'Price'
 		}],
 		"layout": {
 			"title": ticker_info[0],

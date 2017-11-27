@@ -58,3 +58,7 @@ h1, h2 {
     background-image: -webkit-linear-gradient(left, #f0f0f0, #c9bbae, #f0f0f0);
     background-image: linear-gradient(left, #f0f0f0, #c9bbae, #f0f0f0);
 }
+
+.invisible {
+    display: none;
+}
