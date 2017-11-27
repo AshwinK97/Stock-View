@@ -19,3 +19,11 @@ def line(name, x, y, color='#17BECF'):
       "y": y,
       "line": {color: color}
     }
+
+def bar(name, x, y):
+    return {
+        "x": x,
+        "y": y,
+        "name": name,
+        "type": 'bar'
+    }

@@ -50,11 +50,15 @@ def compare():
 
 		ticker2_df= pd.DataFrame(ticker2_cur.fetchall())
 		ticker2_df.columns = list(map(lambda col: col[0], ticker2_cur.description))
-		print ticker1_df[request.args.get('attr')]
-		ticker1_line = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
-		ticker2_line = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
 
-		data = [ticker1_line, ticker2_line]
+		if request.args.get('attr') == 'volume':
+			ticker1_data = bar(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
+			ticker2_data = bar(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
+		else:
+			ticker1_data = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
+			ticker2_data = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
+
+		data = [ticker1_data, ticker2_data]
 
 		graphs = [{
 			"data": data,
