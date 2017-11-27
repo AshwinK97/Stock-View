@@ -4,10 +4,9 @@ import json, plotly
 import numpy as np
 import pandas as pd
 
-from plot import *
-
 # file imports
 from setup import setup
+from plot import *
 
 # setup() # run initial setup
 app = Flask(__name__)
@@ -108,13 +107,10 @@ def graph(ticker):
 		"layout": layout()
 	}]
 
-	# Add "ids" to each of the graphs to pass up to the client
-	# for templating
+	# Add "ids" to each of the graphs to pass up to the client for templating
 	ids = ['graph-{}'.format(i) for i, _ in enumerate(graphs)]
 
 	# Convert the figures to JSON
-	# PlotlyJSONEncoder appropriately converts pandas, datetime, etc
-	# objects to their JSON equivalents
 	graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
 	return render_template("graph.html", tables = tables, ids = ids, graphJSON = graphJSON, name = ticker_info[0], company = ticker_info[1])
