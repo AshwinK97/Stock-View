@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<h1>Public API</h1>
+	<div class="about">
+		<!-- Overview -->
+		<p>
+			Our api allows users to query our database for datasets and retrieve them as JSON objects. These datasets can be used for analysis and other similar projects.
+		</p>
+		<!-- Examples -->
+		<p>Examples: </p>
+		<p>Get up to 100 rows of Google stock information</p>
+		<p> - <a href="http://localhost:8080/api/GOOGL?rows=100">http://localhost:8080/api/GOOGL?rows=100</a></p>
+
+		<p>Get all rows of Apple stock information, between January 1, 2016 and January 1, 2017</p>
+		<p> - <a href="http://localhost:8080/api/AAPL?date-start=2016-1-1&date-end=2017-1-1">http://localhost:8080/api/AAPL?date-start=2016-1-1&date-end=2017-1-1</a></p>
+
+		<p>Get up to 500 volumes of Tesla stock, before July 5, 2014</p>
+		<p> - <a href="http://localhost:8080/api/TSLA?col=volume&date-end=2014-7-5&rows=500">http://localhost:8080/api/TSLA?col=volume&date-end=2014-7-5&rows=500</a></p>
+		
+		<p>Get all the closes of Microsoft stock, after November 10, 2015</p>
+		<p> - <a href="http://localhost:8080/api/MSFT?col=close&date-start=2015-11-10">http://localhost:8080/api/MSFT?col=close&date-start=2015-11-10</a></p>
+	</div>
+{% endblock %}

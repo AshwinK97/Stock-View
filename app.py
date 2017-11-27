@@ -31,6 +31,10 @@ def home():
 def about():
 	return render_template('about.html')
 
+@app.route('/about/api')
+def api_info():
+	return render_template('api_info.html')
+
 @app.route('/compare', methods=['GET'])
 def compare():
 	visible, title = "invisible", ""

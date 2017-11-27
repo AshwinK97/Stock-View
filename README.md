@@ -6,16 +6,15 @@ This repository contains files for the data management systems final project.
   * [x] finish compare view with graph
   * [ ] add date select form for graph view
   * [ ] add indiciaters for specified ticker
-  * [ ] add recent stock news if possible
 * [x] Seperate app.py into multiple files
   * [x] Place ploting procedures in functions within seperate files
   * [x] Place sql procedures in functions
-* [ ] Create API
-  * [ ] request stock data within a specific date range
-  * [ ] request specific date and columns
+* [x] Create API
+  * [x] request stock data within a specific date range
+  * [x] request specific date and columns
 
 ## Overview
- This project will provide stock information for various companies within the last 10 years. This will be used to help analyze the price of a company's stock over a period of time. Using this data, users can analyze and predict future trends for a specific company, and make comparisons between multiple companies.
+This project will provide stock information for various companies within the last 10 years. This will be used to help analyze the price of a company's stock over a period of time. Using this data, users can analyze and predict future trends for a specific company, and make comparisons between multiple companies.
 
 ## Setup and Installation
 * Clone the repository to your local machine
@@ -34,6 +33,22 @@ This repository contains files for the data management systems final project.
 * Make sure there were no errors installing these packages
 * In your terminal you should see `* Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)`
 * You can now open a web browser and enter `http://127.0.0.1:8080` into the search bar
+
+## API
+
+Our api allows users to query our database for datasets and retrieve them as JSON objects. These datasets can be used for analysis and other similar projects.
+
+Ex - Get up to 100 rows of Google stock information
+```http://localhost:8080/api/GOOGL?rows=100```
+
+Ex - Get all rows of Apple stock information, between January 1, 2016 and January 1, 2017
+```http://localhost:8080/api/AAPL?date-start=2016-1-1&date-end=2017-1-1```
+
+Ex - Get up to 500 volumes of Tesla stock, before July 5, 2014
+```http://localhost:8080/api/TSLA?col=volume&date-end=2014-7-5&rows=500```
+
+Ex - Get all the closes of Microsoft stock, after November 10, 2015
+```http://localhost:8080/api/MSFT?col=close&date-start=2015-11-10```
 
 ## Views
 
