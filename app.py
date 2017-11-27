@@ -11,7 +11,7 @@ from plot import *
 # setup() # run initial setup
 app = Flask(__name__)
 
-# perform insert query
+# used to perform insert queries
 def query(query, params):
 	con = sql.connect("db/database.db")
 	con.row_factory = sql.Row
@@ -22,7 +22,7 @@ def query(query, params):
 	except:
 	 	return "error: could not return cursor"
 
-# Define routes
+# Page routes
 @app.route('/')
 def home():
 	return render_template("homepage.html", rows = query("select * from Tickers", []).fetchall())
@@ -78,15 +78,13 @@ def compare():
 	tickers = query("select * from Tickers", []).fetchall()
 	return render_template('compare.html', tickers = tickers, ids = ids, graphJSON = graphJSON, visible = visible, title = title)
 
-## move to seperate file
 @app.route('/graph/<int:ticker>')
 def graph(ticker):
 	ticker_info = query("select name, company from Tickers where id = ?", [ticker]).fetchone()
 	cur = query('''select Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
-		from Prices join Tickers on Tickers.id = Prices.ticker_id
-		where Prices.ticker_id = ?
-		order by price_id ASC
-		limit 100''', [ticker])
+		from Prices join Tickers on Tickers.id = Prices.ticker_id 
+		where Prices.ticker_id = ? order by price_id ASC limit 100''', [ticker]
+	)
 
 	rows = cur.fetchall();
 	# if no rows returned, page not found
@@ -130,13 +128,45 @@ def stock(ticker, page):
 	# if no rows returned, page not found
 	price_rows = price_select_all.fetchall()
 	if len(price_rows) == 0:
-		return render_template('404.html')
+		return render_template('404.html'), 404
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
 	price = pd.DataFrame(price_rows)
 	price.columns = price_columns
 	table = price.to_html(classes='pure-table pure-table-bordered', index=False)
 
 	return render_template("stock.html", table = table, info = ticker_info, page = page+1)
+
+# API calls
+@app.route('/api/<ticker_name>', methods=['GET'])
+def api(ticker_name):
+	# default query
+	string = '''select Prices.date, Prices.open, Prices.high, Prices.low, Prices.close, Prices.volume from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
+	# default parameter
+	params = [ticker_name]
+
+	if len(request.args) != 0:
+		# start date was specified
+		if request.args.get('date-start'):
+			string += " and Prices.date >= ?"
+			params.append(request.args.get('date-start'))
+		
+		# end date was specified
+		if request.args.get('date-end'):
+			string += " and Prices.date <= ?"
+			params.append(request.args.get('date-end'))
+
+		# row limit was specified
+		if request.args.get('rows'):
+			string += " limit ?"
+			params.append(request.args.get('rows'))
+
+	data = query(string, params).fetchall()
+
+	# if no data is retrieved
+	if len(data) == 0:
+		return render_template('404.html'), 404
+
+	return json.dumps([dict(ix) for ix in data])
 
 @app.errorhandler(404)
 def page_not_found(e):
