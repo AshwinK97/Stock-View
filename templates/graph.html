@@ -5,7 +5,23 @@
 	<h1>{{ name }}</h1>
 
 	{% for id in ids %}
+		<!--Graph-->
 		<div id="{{id}}"></div>
+
+		<h2>Indicators</h2>
+		<form action="/graph/{{ticker}}">
+			<div class="pure-g">
+				<div class="pure-u-1">
+					<input class="pure-u-1-6 button-secondary pure-button" type="submit" value="RSI">
+					<input class="pure-u-1-6 button-secondary pure-button" type="submit" value="SMA">
+					<input class="pure-u-1-6 button-secondary pure-button" type="submit" value="MACD">
+					<input class="pure-u-1-6 button-secondary pure-button" type="submit" value="OBV">
+					<input class="pure-u-1-6 button-secondary pure-button" type="submit" value="VWAP">
+				</div>
+			</div>
+		</form>
+
+		<h2>Date Select</h2>
 		<form action="/graph/{{ticker}}" class="pure-form">
 			<div class="pure-g">
 				<div class="pure-u-1-2">
