@@ -66,3 +66,16 @@ The compare page will display 3 column select form that allows the user to pick 
 http://localhost:8080/compare?compare1=<ticker1_id>&compare2=<ticker2_id>&attr=<attribute>
 ```
 The compare graphs page will take the `compare1` and `compare2` values as ticker_ids and construct a single graph with both data sets, comparing the attribute speccified by `attr`. The graphs will have all the same features as those on the graph page. The compare form from the view will still be at the bottom of the page, and the user can select a new set of stocks and attributes to compare with.
+
+## Images
+Comparison of Tesla and Amazon
+![Tesla vs AMAZON](https://i.imgur.com/3Q4PEdw.png)
+
+Comparison of NVIDIA and AMD
+![NVIDIA vs AMD](https://i.imgur.com/IWhQvsM.png)
+
+Comparison of Qualcomm and Cisco
+![Qualcom vs Cisco](https://i.imgur.com/zY7ND9l.png)
+
+Comparison of IBM and HP
+![IBM vs HP](https://i.imgur.com/r0xjrvV.png)
