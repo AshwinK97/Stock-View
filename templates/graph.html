@@ -7,6 +7,7 @@
 	{% for id in ids %}
 		<!--Graph-->
 		<div id="{{id}}"></div>
+	{% endfor %}
 
 		<h2>Indicators</h2>
 		<form action="/graph/{{ticker}}">
@@ -48,6 +49,5 @@
 				</div>
 			</div>
 		</form>
-	{% endfor %}
 	
 {% endblock %}

@@ -107,12 +107,8 @@ def graph(ticker):
 	date = [df.date.tolist()[-1], df.date.tolist()[0]]
 
 	# if parameters were given
-	if len(request.args) != 0:
-		if(request.args.get('date_start') != None):
+	if(request.args.get('date_start') != None):
 			date = [request.args.get('date_start'), request.args.get('date_end')]
-
-		if request.args.get('Volume') == 'on':
-			volume = [(Volume(ticker, date))]
 
 			#graphs.append({
 			#	"data": volume,
@@ -127,6 +123,13 @@ def graph(ticker):
 		"data": data,
 		"layout": layout(date, showlegend=False)
 	})
+
+	if request.args.get('Volume') == 'on':
+			volume = [(Volume(ticker, date))]
+			graphs.append({
+				"data": volume,
+				"layout": layout(date)
+			})
 
 	# Add "ids" to each of the graphs to pass up to the client for templating
 	ids = ['{}'.format(i) for i, _ in enumerate(graphs)]
