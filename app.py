@@ -36,9 +36,9 @@ def about():
 def compare():
 	visible = "invisible"
 	ids, graphJSON = [], []
-	if len(request.args) == 2:
-		ticker1_cur = query('select date, close from Prices where ticker_id = ?', [request.args.get('compare1')])
-		ticker2_cur = query('select date, close from Prices where ticker_id = ?', [request.args.get('compare2')])
+	if len(request.args) == 3:
+		ticker1_cur = query('select date, {} from Prices where ticker_id = ?'.format(request.args.get('attr')), [request.args.get('compare1')])
+		ticker2_cur = query('select date, {} from Prices where ticker_id = ?'.format(request.args.get('attr')), [request.args.get('compare2')])
 		names_cur = query('select id, name from tickers where id = ? or id = ?', [request.args.get('compare1'), request.args.get('compare2')])
 		
 		names_df = pd.DataFrame(names_cur.fetchall())
@@ -50,9 +50,9 @@ def compare():
 
 		ticker2_df= pd.DataFrame(ticker2_cur.fetchall())
 		ticker2_df.columns = list(map(lambda col: col[0], ticker2_cur.description))
-
-		ticker1_line = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df.close)
-		ticker2_line = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df.close)
+		print ticker1_df[request.args.get('attr')]
+		ticker1_line = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
+		ticker2_line = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
 
 		data = [ticker1_line, ticker2_line]
 
