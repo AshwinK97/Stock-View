@@ -129,6 +129,7 @@ def stock(ticker, page):
 	price_rows = price_select_all.fetchall()
 	if len(price_rows) == 0:
 		return render_template('404.html'), 404
+
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
 	price = pd.DataFrame(price_rows)
 	price.columns = price_columns
@@ -140,11 +141,29 @@ def stock(ticker, page):
 @app.route('/api/<ticker_name>', methods=['GET'])
 def api(ticker_name):
 	# default query
-	string = '''select Prices.date, Prices.open, Prices.high, Prices.low, Prices.close, Prices.volume from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
+	string = '''
+		select Prices.date, Prices.open, Prices.high, Prices.low, Prices.close, Prices.volume 
+		from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)
+	'''
 	# default parameter
 	params = [ticker_name]
 
+	# if parameters were given
 	if len(request.args) != 0:
+		# column was specified
+		if request.args.get('col') == 'date':
+			string = '''select Prices.date from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
+		elif request.args.get('col') == 'open':
+			string = '''select Prices.open from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
+		elif request.args.get('col') == 'high':
+			string = '''select Prices.high from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
+		elif request.args.get('col') == 'low':
+			string = '''select Prices.low from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
+		elif request.args.get('col') == 'close':
+			string = '''select Prices.close from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
+		elif request.args.get('col') == 'volume':
+			string = '''select Prices.volume from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
+
 		# start date was specified
 		if request.args.get('date-start'):
 			string += " and Prices.date >= ?"
@@ -160,12 +179,14 @@ def api(ticker_name):
 			string += " limit ?"
 			params.append(request.args.get('rows'))
 
+	# execute constructed query with specified parameters
 	data = query(string, params).fetchall()
-
-	# if no data is retrieved
+	
+	# if no data was retrieved
 	if len(data) == 0:
 		return render_template('404.html'), 404
 
+	# return data as JSON object
 	return json.dumps([dict(ix) for ix in data])
 
 @app.errorhandler(404)
