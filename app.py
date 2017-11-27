@@ -129,6 +129,9 @@ def stock(ticker, page):
 	ticker_info = query("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
 	
 	price_rows = price_select_all.fetchall()
+	# if no rows returned, page not found
+	if len(price_rows) == 0:
+		return render_template('404.html')
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
 	
 	price = pd.DataFrame(price_rows)
