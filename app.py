@@ -87,7 +87,7 @@ def graph(ticker):
 	ticker_info = query("select name, company from Tickers where id = ?", [ticker]).fetchone()
 	cur = query('''select Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
 		from Prices join Tickers on Tickers.id = Prices.ticker_id 
-		where Prices.ticker_id = ? order by price_id ASC limit 100''', [ticker]
+		where Prices.ticker_id = ? order by price_id ASC limit 500''', [ticker]
 	)
 
 	rows = cur.fetchall();
@@ -99,26 +99,30 @@ def graph(ticker):
 	df = pd.DataFrame(rows)
 	df.columns = columns
 
-	# tables = [df.head(25).to_html(classes='pure-table', index=False)]
-	
-	#Testing new plot functions
+	# get candlestick plot data
 	plot_candlestick = candlestick(df.date.tolist(), df.open.tolist(), df.close.tolist(), df.high.tolist(), df.low.tolist())
-	#plot_line_close = line(ticker_info[0]+'.Close', df.date.tolist(), df.close.tolist())
+	data = [plot_candlestick]
+	
+	# get absolute date range
+	date = df.date.tolist()[::len(df.date.tolist())-1]
 
-	data = [plot_candlestick]#, plot_line_close]
+	# if parameters were given
+	if len(request.args) != 0:
+		date = [request.args.get('date_start'), request.args.get('date_end')]
 
+	print date
 	graphs = [{
 		"data": data,
-		"layout": layout()
+		"layout": layout(date, showlegend=False)
 	}]
 
 	# Add "ids" to each of the graphs to pass up to the client for templating
-	ids = ['graph-{}'.format(i) for i, _ in enumerate(graphs)]
+	ids = ['{}'.format(i) for i, _ in enumerate(graphs)]
 
 	# Convert the figures to JSON
 	graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
-	return render_template("graph.html", ids = ids, graphJSON = graphJSON, name = ticker_info[0], company = ticker_info[1])
+	return render_template("graph.html", ids = ids, graphJSON = graphJSON, name = ticker_info[0], company = ticker_info[1], ticker = ticker)
 
 @app.route('/stock/<int:ticker>/<int:page>')
 def stock(ticker, page):
@@ -134,6 +138,7 @@ def stock(ticker, page):
 	if len(price_rows) == 0:
 		return render_template('404.html'), 404
 
+	# Create dataframe from query and convert to html table
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
 	price = pd.DataFrame(price_rows)
 	price.columns = price_columns

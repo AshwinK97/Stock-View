@@ -28,10 +28,21 @@ def bar(name, x, y):
 		"type": 'bar'
 	}
 
-def layout():
+def layout(date = [], showlegend=True):
 	return {
-		"dragmode": 'zoom', 
+		"dragmode": 'turntable', 
 		"margin": {"r": 10, "t": 25, "b": 40, "l": 60},
-		"showlegend": True,
-		"legend": {"orientation": "h"}
+		"showlegend": showlegend,
+		"legend": {"orientation": "h"},
+        "xaxis": {
+            "autorange": False, 
+            "domain": [0, 1], 
+            "range": date,
+            "type": "date"
+        },
+        "yaxis": {
+            "autorange": True,
+            "rangemode": "normal",
+            "type": "linear"
+        }
 	}

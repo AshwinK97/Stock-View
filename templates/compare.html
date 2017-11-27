@@ -9,29 +9,37 @@
 		{% endfor %}
 	</div>
 
-	<form method="GET">
+	<form method="GET" class="pure-form">
 		<div class="section">
 			<div class="pure-g">
-				<select class="pure-u-1-3" name="compare1" size="13">
-					{% for ticker in tickers %}
-						<option value={{ticker["id"]}}>{{ticker["name"]}} - {{ticker["company"]}}</option>
-					{% endfor %}
-				</select>
-				<select class="pure-u-1-3" name="compare2" size="13">
-					{% for ticker in tickers %}
-						<option value={{ticker["id"]}}>{{ticker["name"]}} - {{ticker["company"]}}</option>
-					{% endfor %}
-				</select>
-				<select class="pure-u-1-3" name="attr" size="13">
-					<option value="open">Open</option>
-					<option value="close">Close</option>
-					<option value="high">High</option>
-					<option value="low">Low</option>
-					<option value="volume">Volume</option>
-				</select>
+				<div class="pure-u-1-3">
+					<select class="pure-u-23-24" name="compare1" >
+						{% for ticker in tickers %}
+							<option value={{ticker["id"]}}>{{ticker["name"]}} - {{ticker["company"]}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="pure-u-1-3">
+					<select class="pure-u-23-24" name="compare2" >
+						{% for ticker in tickers %}
+							<option value={{ticker["id"]}}>{{ticker["name"]}} - {{ticker["company"]}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="pure-u-1-3">
+					<select class="pure-u-23-24" name="attr" >
+						<option value="open">Open</option>
+						<option value="close">Close</option>
+						<option value="high">High</option>
+						<option value="low">Low</option>
+						<option value="volume">Volume</option>
+					</select>
+				</div>
 			</div>
 			<hr class="rule">
-			<div class="pure-g"><input type="submit" value="Compare" class="pure-button button-xlarge pure-u-1"></div>
+			<div class="pure-g">
+				<input type="submit" value="Compare" class="pure-button button-xlarge pure-u-1">
+			</div>
 		</div>
 	</form>
 	
