@@ -2,12 +2,15 @@
 <html>
 <head>
 	<title>Page Not Found</title>
+	<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+	<link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/404.css') }}">
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
 </head>
 <body>
 	<h1>Error 404: Page not found</h1>
 	<img src="{{ url_for('static', filename='img/notfound.png') }}">
 	<br>
-	<a href="/">return</a>
+	<a href="/"><div class="pure-button">Return</div></a>
 </body>
 </html>

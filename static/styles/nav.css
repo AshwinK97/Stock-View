@@ -10,6 +10,10 @@
     float: left;
 }
 
+.nav-item-right {
+    float: right;
+}
+
 .nav-link {
     display: block;
     color: white;

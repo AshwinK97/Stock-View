@@ -21,6 +21,13 @@ h1, h2 {
 	padding-bottom: 5%;
 }
 
+.about {
+    padding: 2% 10% 2% 10%;
+    background-color: #232f3e;
+    color: white;
+    font-size: 130%;
+}
+
 #stock-table {
     border-collapse: collapse;
     width: 100%;

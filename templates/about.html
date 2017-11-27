@@ -2,5 +2,23 @@
 
 {% block body %}
 	<h1>About</h1>
-	<p>This is an application created with python flask</p>
+	<div class="about">
+		<!-- Overview -->
+		<p>
+			This web application will provide information on various companies stocks within the last 10 years. This data will be used to help analyze the price of a company's stock over a period of time. Users can visualize this data, predict future trends for a specific company and make comparisons between multiple companies. Our goal was to design make this tool interactive and accessible.
+		</p>
+		<!-- Features -->
+		<p>Some of the features include: </p>
+		<ul>
+			<li>Retrieving stock data for a company</li>
+			<li>Plotting stock data within a specified data range</li>
+			<li>Exporting plots as images</li>
+			<li>Editing plots and extracting raw data</li>
+			<li>Comparing stocks based on specific attributes</li>
+		</ul>
+		<!-- API -->
+		<p>
+			We also included a public API that can be used to request the raw data in our database. This api is capable of taking complex parameters and returning the relevant data in JSON format. The requested data can be used freely for all of your application building and analytical needs.
+		</p>
+	</div>
 {% endblock %}

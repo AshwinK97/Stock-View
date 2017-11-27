@@ -38,9 +38,8 @@
 	for(var i in graphs) {
 		Plotly.plot(ids[i], graphs[i].data, graphs[i].layout)
 	}
-</script>
 
-<script type="text/javascript">
+	// get date for copyright
 	var d = new Date()
 	document.getElementById('legal').innerHTML = "Copyright © " + d.getFullYear() + " StockView. All rights reserved.";
 </script>

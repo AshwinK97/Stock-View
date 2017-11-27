@@ -5,6 +5,5 @@ img {
 	width: 300px;
 }
 a {
-	float: left;
-	margin-left: 30%;
+	float: center;
 }

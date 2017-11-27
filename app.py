@@ -89,12 +89,15 @@ def graph(ticker):
 		limit 100''', [ticker])
 
 	rows = cur.fetchall();
+	# if no rows returned, page not found
+	if len(rows) == 0:
+		return render_template('404.html')
 	columns = list(map(lambda col: col[0], cur.description))
 
 	df = pd.DataFrame(rows)
 	df.columns = columns
 
-	tables = [df.head(25).to_html(classes='pure-table', index=False)]
+	# tables = [df.head(25).to_html(classes='pure-table', index=False)]
 	
 	#Testing new plot functions
 	plot_candlestick = candlestick(df.date.tolist(), df.open.tolist(), df.close.tolist(), df.high.tolist(), df.low.tolist())
@@ -113,23 +116,22 @@ def graph(ticker):
 	# Convert the figures to JSON
 	graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
-	return render_template("graph.html", tables = tables, ids = ids, graphJSON = graphJSON, name = ticker_info[0], company = ticker_info[1])
+	return render_template("graph.html", ids = ids, graphJSON = graphJSON, name = ticker_info[0], company = ticker_info[1])
 
 @app.route('/stock/<int:ticker>/<int:page>')
 def stock(ticker, page):
-	# select 50 prices after the specified offset
+	# select 50 rows after the specified offset
 	price_select_all = query('''select (select count(*) from prices as t2 where t2.price_id <= t1.price_id) 
 		as row, date, open, high, low, close, volume from Prices as t1 where ticker_id = ? 
 		order by price_id asc limit 50 offset ?''', [ticker, page*50]
 	)
 	ticker_info = query("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
 	
-	price_rows = price_select_all.fetchall()
 	# if no rows returned, page not found
+	price_rows = price_select_all.fetchall()
 	if len(price_rows) == 0:
 		return render_template('404.html')
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
-	
 	price = pd.DataFrame(price_rows)
 	price.columns = price_columns
 	table = price.to_html(classes='pure-table pure-table-bordered', index=False)
