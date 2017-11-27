@@ -7,6 +7,7 @@ import pandas as pd
 # file imports
 from setup import setup
 from plot import *
+from indicator import *
 
 # setup() # run initial setup
 app = Flask(__name__)
@@ -84,6 +85,8 @@ def compare():
 
 @app.route('/graph/<int:ticker>')
 def graph(ticker):
+	data = []
+	graphs = []
 	ticker_info = query("select name, company from Tickers where id = ?", [ticker]).fetchone()
 	cur = query('''select Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
 		from Prices join Tickers on Tickers.id = Prices.ticker_id 
@@ -94,27 +97,34 @@ def graph(ticker):
 	# if no rows returned, page not found
 	if len(rows) == 0:
 		return render_template('404.html')
-	columns = list(map(lambda col: col[0], cur.description))
 
 	df = pd.DataFrame(rows)
-	df.columns = columns
+	df.columns = list(map(lambda col: col[0], cur.description))
 
-	# get candlestick plot data
-	plot_candlestick = candlestick(df.date.tolist(), df.open.tolist(), df.close.tolist(), df.high.tolist(), df.low.tolist())
-	data = [plot_candlestick]
-	
 	# get absolute date range
-	date = df.date.tolist()[::len(df.date.tolist())-1]
+	date = [df.date.tolist()[-1], df.date.tolist()[0]]
 
 	# if parameters were given
 	if len(request.args) != 0:
-		date = [request.args.get('date_start'), request.args.get('date_end')]
+		if(request.args.get('date_start') != None):
+			date = [request.args.get('date_start'), request.args.get('date_end')]
 
-	print date
-	graphs = [{
+		if request.args.get('Volume') == 'on':
+			volume = [(Volume(ticker, date))]
+
+			#graphs.append({
+			#	"data": volume,
+			#	"layout": layout(date, showlegend=False)
+			#})
+
+	# get candlestick plot data
+	plot_candlestick = candlestick(df.date.tolist(), df.open.tolist(), df.close.tolist(), df.high.tolist(), df.low.tolist())
+	data.append(plot_candlestick)
+
+	graphs.append({
 		"data": data,
 		"layout": layout(date, showlegend=False)
-	}]
+	})
 
 	# Add "ids" to each of the graphs to pass up to the client for templating
 	ids = ['{}'.format(i) for i, _ in enumerate(graphs)]
