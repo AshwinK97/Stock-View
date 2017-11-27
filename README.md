@@ -77,6 +77,5 @@ Comparison of NVIDIA and AMD
 Comparison of Qualcomm and Cisco
 ![Qualcom vs Cisco](https://i.imgur.com/zY7ND9l.png)
 
-Comparison of IBM vs HP
+Comparison of IBM and HP
 ![IBM vs HP](https://i.imgur.com/r0xjrvV.png)
-
