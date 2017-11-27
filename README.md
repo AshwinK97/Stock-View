@@ -38,16 +38,16 @@ This project will provide stock information for various companies within the las
 
 Our api allows users to query our database for datasets and retrieve them as JSON objects. These datasets can be used for analysis and other similar projects.
 
-Ex - Get up to 100 rows of Google stock information
+Ex - Get up to 100 rows of Google stock information  
 ```http://localhost:8080/api/GOOGL?rows=100```
 
-Ex - Get all rows of Apple stock information, between January 1, 2016 and January 1, 2017
+Ex - Get all rows of Apple stock information, between January 1, 2016 and January 1, 2017  
 ```http://localhost:8080/api/AAPL?date-start=2016-1-1&date-end=2017-1-1```
 
-Ex - Get up to 500 volumes of Tesla stock, before July 5, 2014
+Ex - Get up to 500 volumes of Tesla stock, before July 5, 2014  
 ```http://localhost:8080/api/TSLA?col=volume&date-end=2014-7-5&rows=500```
 
-Ex - Get all the closes of Microsoft stock, after November 10, 2015
+Ex - Get all the closes of Microsoft stock, after November 10, 2015  
 ```http://localhost:8080/api/MSFT?col=close&date-start=2015-11-10```
 
 ## Views
