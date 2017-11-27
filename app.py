@@ -34,7 +34,7 @@ def about():
 
 @app.route('/compare', methods=['GET'])
 def compare():
-	visible = "invisible"
+	visible, title = "invisible", ""
 	ids, graphJSON = [], []
 	if len(request.args) == 3:
 		ticker1_cur = query('select date, {} from Prices where ticker_id = ?'.format(request.args.get('attr')), [request.args.get('compare1')])
@@ -74,8 +74,10 @@ def compare():
 
 		visible = "" # no longer invisible
 
+		title = "- {} with {} - {}".format(names_df.name[int(request.args.get('compare1'))], names_df.name[int(request.args.get('compare2'))], request.args.get('attr').title())
+
 	tickers = query("select * from Tickers", []).fetchall()
-	return render_template('compare.html', tickers = tickers, ids = ids, graphJSON = graphJSON, visible = visible)
+	return render_template('compare.html', tickers = tickers, ids = ids, graphJSON = graphJSON, visible = visible, title = title)
 
 ## move to seperate file
 @app.route('/graph/<int:ticker>')
