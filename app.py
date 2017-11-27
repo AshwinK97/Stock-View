@@ -9,11 +9,11 @@ from plot import *
 # file imports
 from setup import setup
 
-setup() # run initial setup
+# setup() # run initial setup
 app = Flask(__name__)
 
 # perform insert query
-def select(query, params):
+def query(query, params):
 	con = sql.connect("db/database.db")
 	con.row_factory = sql.Row
 	cur = con.cursor()
@@ -26,7 +26,7 @@ def select(query, params):
 # Define routes
 @app.route('/')
 def home():
-	return render_template("homepage.html", rows = select("select * from Tickers", []).fetchall())
+	return render_template("homepage.html", rows = query("select * from Tickers", []).fetchall())
 
 @app.route('/about')
 def about():
@@ -34,16 +34,59 @@ def about():
 
 @app.route('/compare', methods=['GET'])
 def compare():
-	cmp1, cmp2 = "", ""
-	if request.args:
-		cmp1, cmp2 = request.args.get('compare1'), request.args.get('compare2')
-	return render_template('compare.html', tickers = select("select * from Tickers", []).fetchall(), data = [cmp1, cmp2])
+	visible = "invisible"
+	ids, graphJSON = [], []
+	if len(request.args) == 2:
+		ticker1_cur = query('select date, close from Prices where ticker_id = ?', [request.args.get('compare1')])
+		ticker2_cur = query('select date, close from Prices where ticker_id = ?', [request.args.get('compare2')])
+		names_cur = query('select id, name from tickers where id = ? or id = ?', [request.args.get('compare1'), request.args.get('compare2')])
+		
+		names_df = pd.DataFrame(names_cur.fetchall())
+		names_df.columns = list(map(lambda col: col[0], names_cur.description))
+		names_df.set_index('id', inplace=True)
+
+		ticker1_df = pd.DataFrame(ticker1_cur.fetchall())
+		ticker1_df.columns = list(map(lambda col: col[0], ticker1_cur.description))
+
+		ticker2_df= pd.DataFrame(ticker2_cur.fetchall())
+		ticker2_df.columns = list(map(lambda col: col[0], ticker2_cur.description))
+
+		ticker1_line = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df.close)
+		ticker2_line = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df.close)
+
+		data = [ticker1_line, ticker2_line]
+
+		graphs = [{
+			"data": data,
+			"layout": {
+				"dragmode": 'zoom', 
+				"margin": {
+					"r": 10, 
+					"t": 25, 
+					"b": 40, 
+					"l": 60
+				},
+				"showlegend": False
+			}
+		}]
+
+		ids = ['graph-{}'.format(i) for i, _ in enumerate(graphs)]
+
+		# Convert the figures to JSON
+		# PlotlyJSONEncoder appropriately converts pandas, datetime, etc
+		# objects to their JSON equivalents
+		graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+
+		visible = ""
+
+	tickers = query("select * from Tickers", []).fetchall()
+	return render_template('compare.html', tickers = tickers, ids = ids, graphJSON = graphJSON, visible = visible)
 
 ## move to seperate file
 @app.route('/graph/<int:ticker>')
 def graph(ticker):
-	ticker_info = select("select name, company from Tickers where id = ?", [ticker]).fetchone()
-	cur = select('''select Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
+	ticker_info = query("select name, company from Tickers where id = ?", [ticker]).fetchone()
+	cur = query('''select Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
 		from Prices join Tickers on Tickers.id = Prices.ticker_id
 		where Prices.ticker_id = ?
 		order by price_id ASC
@@ -91,7 +134,7 @@ def graph(ticker):
 
 @app.route('/stock/<int:ticker>')
 def stock(ticker):
-	price_select_all = select("select date, open, high, low, close, volume from Prices where ticker_id = ? order by price_id asc", [ticker])
+	price_select_all = query("select date, open, high, low, close, volume from Prices where ticker_id = ? order by price_id asc", [ticker])
 	
 	price_rows = price_select_all.fetchall()
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
@@ -99,7 +142,7 @@ def stock(ticker):
 	price = pd.DataFrame(price_rows)
 	price.columns = price_columns
 
-	ticker_info = select("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
+	ticker_info = query("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
 
 	return render_template("stock.html", table = price.to_html(classes='pure-table pure-table-bordered', index=False), info = ticker_info)
 
