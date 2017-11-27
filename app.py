@@ -4,6 +4,8 @@ import json, plotly
 import numpy as np
 import pandas as pd
 
+from plot import *
+
 # file imports
 from setup import setup
 
@@ -11,7 +13,7 @@ from setup import setup
 app = Flask(__name__)
 
 # perform insert query
-def select(query, params):
+def query(query, params):
 	con = sql.connect("db/database.db")
 	con.row_factory = sql.Row
 	cur = con.cursor()
@@ -24,7 +26,7 @@ def select(query, params):
 # Define routes
 @app.route('/')
 def home():
-	return render_template("homepage.html", rows = select("select * from Tickers", []).fetchall())
+	return render_template("homepage.html", rows = query("select * from Tickers", []).fetchall())
 
 @app.route('/about')
 def about():
@@ -33,25 +35,62 @@ def about():
 @app.route('/compare', methods=['GET'])
 def compare():
 	visible = "invisible"
-	if len(request.args) == 2:
-		ticker1 = select('select date, close from Prices where ticker_id = ?', [request.args.get('compare1')])
-		ticker2 = select('select date, close from Prices where ticker_id = ?', [request.args.get('compare2')])
+	ids, graphJSON = [], []
+	if len(request.args) == 3:
+		ticker1_cur = query('select date, {} from Prices where ticker_id = ?'.format(request.args.get('attr')), [request.args.get('compare1')])
+		ticker2_cur = query('select date, {} from Prices where ticker_id = ?'.format(request.args.get('attr')), [request.args.get('compare2')])
+		names_cur = query('select id, name from tickers where id = ? or id = ?', [request.args.get('compare1'), request.args.get('compare2')])
+		
+		names_df = pd.DataFrame(names_cur.fetchall())
+		names_df.columns = list(map(lambda col: col[0], names_cur.description))
+		names_df.set_index('id', inplace=True)
 
-		## kaushal's graph
+		ticker1_df = pd.DataFrame(ticker1_cur.fetchall())
+		ticker1_df.columns = list(map(lambda col: col[0], ticker1_cur.description))
+
+		ticker2_df= pd.DataFrame(ticker2_cur.fetchall())
+		ticker2_df.columns = list(map(lambda col: col[0], ticker2_cur.description))
+		print ticker1_df[request.args.get('attr')]
+		ticker1_line = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
+		ticker2_line = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
+
+		data = [ticker1_line, ticker2_line]
+
+		graphs = [{
+			"data": data,
+			"layout": {
+				"dragmode": 'zoom', 
+				"margin": {
+					"r": 10, 
+					"t": 25, 
+					"b": 40, 
+					"l": 60
+				},
+				"showlegend": False
+			}
+		}]
+
+		ids = ['graph-{}'.format(i) for i, _ in enumerate(graphs)]
+
+		# Convert the figures to JSON
+		# PlotlyJSONEncoder appropriately converts pandas, datetime, etc
+		# objects to their JSON equivalents
+		graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
 		visible = ""
 
-	tickers = select("select * from Tickers", []).fetchall()
-	return render_template('compare.html', tickers = tickers, visible = visible)
+	tickers = query("select * from Tickers", []).fetchall()
+	return render_template('compare.html', tickers = tickers, ids = ids, graphJSON = graphJSON, visible = visible)
 
 ## move to seperate file
 @app.route('/graph/<int:ticker>')
 def graph(ticker):
-	ticker_info = select("select name, company from Tickers where id = ?", [ticker]).fetchone()
-	cur = select('''select Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
+	ticker_info = query("select name, company from Tickers where id = ?", [ticker]).fetchone()
+	cur = query('''select Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
 		from Prices join Tickers on Tickers.id = Prices.ticker_id
 		where Prices.ticker_id = ?
-		order by price_id ASC''', [ticker])
+		order by price_id ASC
+		limit 500''', [ticker])
 
 	rows = cur.fetchall();
 	columns = list(map(lambda col: col[0], cur.description))
@@ -60,18 +99,15 @@ def graph(ticker):
 	df.columns = columns
 
 	tables = [df.head(25).to_html(classes='pure-table', index=False)]
+	
+	#Testing new plot functions
+	plot_candlestick = candlestick(df.date.tolist(), df.open.tolist(), df.close.tolist(), df.high.tolist(), df.low.tolist())
+	plot_line_close = line(ticker_info[0]+'.Close', df.date.tolist(), df.close.tolist())
+
+	data = [plot_candlestick, plot_line_close]
 
 	graphs = [{
-		"data": [{
-			"x": df.date.tolist(),
-			"open": df.open.tolist(),
-			"close": df.close.tolist(),
-			"high": df.high.tolist(),
-			"low": df.low.tolist(),
-			"type": 'candlestick',
-			"xaxis": 'Date',
-			"yaxis": 'Price'
-		}],
+		"data": data,
 		"layout": {
 			"title": ticker_info[0],
 			"dragmode": 'zoom', 
@@ -104,14 +140,14 @@ def stock(ticker, page):
 		order by price_id asc limit 50 offset ?''', [ticker, page*100]
 	)
 	ticker_info = select("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
-
+	
 	price_rows = price_select_all.fetchall()
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
 	
 	price = pd.DataFrame(price_rows)
 	price.columns = price_columns
 	table = price.to_html(classes='pure-table pure-table-bordered', index=False)
-
+	
 	return render_template("stock.html", table = table, info = ticker_info, page = page+1)
 
 @app.errorhandler(404)
