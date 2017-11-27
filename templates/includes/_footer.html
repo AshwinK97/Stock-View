@@ -15,14 +15,14 @@
 	</ul>
 	<ul class="center">
 		<li class="footer-header">Resources</li>
-		<li><a class="footer-link" href="http://flask.pocoo.org/">python-flask</a></li>
-		<li><a class="footer-link" href="https://www.sqlite.org/">sqlite3</a></li>
+		<li><a class="footer-link" href="http://flask.pocoo.org/">Flask</a></li>
+		<li><a class="footer-link" href="https://www.sqlite.org/">SQLite3</a></li>
 		<li><a class="footer-link" href="https://www.quandl.com/tools/api">Quandl API</a></li>
-		<li><a class="footer-link" href="https://www.quandl.com/tools/api">Quandl API</a></li>
+		<li><a class="footer-link" href="#">placeholder</a></li>
 	</ul>
-	<div id="legal">
-		Copyright © 2017 SOFE3700. All rights reserved.
-	</div>
+</div>
+<div id="legal">
+	Copyright © 2017 SOFE3700. All rights reserved.
 </div>
 
 <!-- D3.js -->
@@ -38,4 +38,9 @@
 	for(var i in graphs) {
 		Plotly.plot(ids[i], graphs[i].data, graphs[i].layout)
 	}
+</script>
+
+<script type="text/javascript">
+	var d = new Date()
+	document.getElementById('legal').innerHTML = "Copyright © " + d.getFullYear() + " StockView. All rights reserved.";
 </script>

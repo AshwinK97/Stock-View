@@ -4,8 +4,6 @@
 	<h1>Compare {{title}}</h1>
 	
 	<div class="{{visible}}">
-		<!-- graph goes here, only if --> 
-		<!-- example: compare?compare1=AAPL&compare2=GOOGL -->
 		{% for id in ids %}
 			<div id="{{id}}"></div>
 		{% endfor %}
@@ -14,23 +12,23 @@
 	<form method="GET">
 		<div class="section">
 			<div class="pure-g">
-				<select class="pure-u-1-3" name="compare1" size="10">
+				<select class="pure-u-1-3" name="compare1" size="13">
 					{% for ticker in tickers %}
 						<option value={{ticker["id"]}}>{{ticker["name"]}} - {{ticker["company"]}}</option>
 					{% endfor %}
 				</select>
-				<select class="pure-u-1-3" name="compare2" size="10">
+				<select class="pure-u-1-3" name="compare2" size="13">
 					{% for ticker in tickers %}
 						<option value={{ticker["id"]}}>{{ticker["name"]}} - {{ticker["company"]}}</option>
 					{% endfor %}
 				</select>
-				<select class="pure-u-1-3" name="attr" size="10">
-							<option value="open">Open</option>
-							<option value="close">Close</option>
-							<option value="high">High</option>
-							<option value="low">Low</option>
-							<option value="volume">Volume</option>
-					</select>
+				<select class="pure-u-1-3" name="attr" size="13">
+					<option value="open">Open</option>
+					<option value="close">Close</option>
+					<option value="high">High</option>
+					<option value="low">Low</option>
+					<option value="volume">Volume</option>
+				</select>
 			</div>
 			<hr class="rule">
 			<div class="pure-g"><input type="submit" value="Compare" class="pure-button button-xlarge pure-u-1"></div>
