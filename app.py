@@ -64,9 +64,11 @@ def compare():
 
 		data = [ticker1_data, ticker2_data]
 
+		date = [ticker1_df.date.tolist()[-1], ticker1_df.date.tolist()[0]]
+		
 		graphs = [{
 			"data": data,
-			"layout": layout()
+			"layout": layout(date)
 		}]
 
 		ids = ['graph-{}'.format(i) for i, _ in enumerate(graphs)]
