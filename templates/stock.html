@@ -7,7 +7,11 @@
 		<div class="pure-button">Go To Graph</div>
 	</a>
 	<div id="stock-table">
+		<h4>Showing 50 rows from page {{page}}</h4>
 		{{ table|safe }}
 	</div>
+	<a href="/stock/{{info['id']}}/{{page}}">
+		<div class="pure-button">Next Page</div>
+	</a>
 	
 {% endblock %}
