@@ -50,24 +50,19 @@ def compare():
 
 		ticker2_df= pd.DataFrame(ticker2_cur.fetchall())
 		ticker2_df.columns = list(map(lambda col: col[0], ticker2_cur.description))
-		print ticker1_df[request.args.get('attr')]
-		ticker1_line = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
-		ticker2_line = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
 
-		data = [ticker1_line, ticker2_line]
+		if request.args.get('attr') == 'volume':
+			ticker1_data = bar(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
+			ticker2_data = bar(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
+		else:
+			ticker1_data = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
+			ticker2_data = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
+
+		data = [ticker1_data, ticker2_data]
 
 		graphs = [{
 			"data": data,
-			"layout": {
-				"dragmode": 'zoom', 
-				"margin": {
-					"r": 10, 
-					"t": 25, 
-					"b": 40, 
-					"l": 60
-				},
-				"showlegend": False
-			}
+			"layout": layout()
 		}]
 
 		ids = ['graph-{}'.format(i) for i, _ in enumerate(graphs)]
@@ -90,7 +85,7 @@ def graph(ticker):
 		from Prices join Tickers on Tickers.id = Prices.ticker_id
 		where Prices.ticker_id = ?
 		order by price_id ASC
-		limit 500''', [ticker])
+		limit 100''', [ticker])
 
 	rows = cur.fetchall();
 	columns = list(map(lambda col: col[0], cur.description))
@@ -102,23 +97,13 @@ def graph(ticker):
 	
 	#Testing new plot functions
 	plot_candlestick = candlestick(df.date.tolist(), df.open.tolist(), df.close.tolist(), df.high.tolist(), df.low.tolist())
-	plot_line_close = line(ticker_info[0]+'.Close', df.date.tolist(), df.close.tolist())
+	#plot_line_close = line(ticker_info[0]+'.Close', df.date.tolist(), df.close.tolist())
 
-	data = [plot_candlestick, plot_line_close]
+	data = [plot_candlestick]#, plot_line_close]
 
 	graphs = [{
 		"data": data,
-		"layout": {
-			"title": ticker_info[0],
-			"dragmode": 'zoom', 
-			"margin": {
-				"r": 10, 
-				"t": 25, 
-				"b": 40, 
-				"l": 60
-			},
-			"showlegend": False
-		}
+		"layout": layout()
 	}]
 
 	# Add "ids" to each of the graphs to pass up to the client

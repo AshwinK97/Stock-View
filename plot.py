@@ -19,3 +19,24 @@ def line(name, x, y, color='#17BECF'):
       "y": y,
       "line": {color: color}
     }
+
+def bar(name, x, y):
+    return {
+        "x": x,
+        "y": y,
+        "name": name,
+        "type": 'bar'
+    }
+
+def layout():
+    return {
+                "dragmode": 'zoom', 
+                "margin": {
+                    "r": 10, 
+                    "t": 25, 
+                    "b": 40, 
+                    "l": 60
+                },
+                "showlegend": True,
+                "legend": {"orientation": "h"}
+            }
