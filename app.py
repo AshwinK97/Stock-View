@@ -4,6 +4,10 @@ import json, plotly
 import numpy as np
 import pandas as pd
 
+# file imports
+from setup import setup
+
+setup() # run initial setup
 app = Flask(__name__)
 
 # perform insert query
