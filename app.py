@@ -134,12 +134,12 @@ def graph(ticker):
 
 @app.route('/stock/<int:ticker>/<int:page>')
 def stock(ticker, page):
-	# select 100 prices after the specified offset
-	price_select_all = select('''
-		select (select count(*) from prices as t2 where t2.price_id <= t1.price_id) as row, date, open, high, low, close, volume from Prices as t1 where ticker_id = ? 
-		order by price_id asc limit 50 offset ?''', [ticker, page*100]
+	# select 50 prices after the specified offset
+	price_select_all = query('''select (select count(*) from prices as t2 where t2.price_id <= t1.price_id) 
+		as row, date, open, high, low, close, volume from Prices as t1 where ticker_id = ? 
+		order by price_id asc limit 50 offset ?''', [ticker, page*50]
 	)
-	ticker_info = select("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
+	ticker_info = query("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
 	
 	price_rows = price_select_all.fetchall()
 	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
@@ -147,7 +147,7 @@ def stock(ticker, page):
 	price = pd.DataFrame(price_rows)
 	price.columns = price_columns
 	table = price.to_html(classes='pure-table pure-table-bordered', index=False)
-	
+
 	return render_template("stock.html", table = table, info = ticker_info, page = page+1)
 
 @app.errorhandler(404)
