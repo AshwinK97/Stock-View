@@ -64,7 +64,7 @@ def compare():
 
 		data = [ticker1_data, ticker2_data]
 
-		date = [ticker1_df.date.tolist()[-1], ticker1_df.date.tolist()[0]]
+		date = [ticker1_df.date.tolist()[0], ticker1_df.date.tolist()[-1]]
 		
 		graphs = [{
 			"data": data,
