@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import sqlite3 as sql
 import json, plotly
 import numpy as np
@@ -17,6 +17,7 @@ def select(query, params):
 	except:
 	 	return "error: could not return cursor"
 
+# Define routes
 @app.route('/')
 def home():
 	return render_template("homepage.html", rows = select("select * from Tickers", []).fetchall())
@@ -25,10 +26,18 @@ def home():
 def about():
 	return render_template('about.html')
 
+@app.route('/compare', methods=['GET'])
+def compare():
+	cmp1, cmp2 = "", ""
+	if request.args:
+		cmp1, cmp2 = request.args.get('compare1'), request.args.get('compare2')
+	return render_template('compare.html', tickers = select("select * from Tickers", []).fetchall(), data = [cmp1, cmp2])
+
 ## move to seperate file
 @app.route('/graph/<int:ticker>')
 def graph(ticker):
-	cur = select('''select Tickers.name, Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
+	ticker_info = select("select name, company from Tickers where id = ?", [ticker]).fetchone()
+	cur = select('''select Prices.date, Prices.open, Prices.close, Prices.high, Prices.low, Prices.volume
 		from Prices join Tickers on Tickers.id = Prices.ticker_id
 		where Prices.ticker_id = ?
 		order by price_id ASC''', [ticker])
@@ -38,8 +47,8 @@ def graph(ticker):
 
 	df = pd.DataFrame(rows)
 	df.columns = columns
-	
-	tables = [df.head(10).to_html(classes='pure-table', index=False)]
+
+	tables = [df.head(25).to_html(classes='pure-table', index=False)]
 
 	graphs = [{
 		"data": [{
@@ -53,7 +62,7 @@ def graph(ticker):
 				"yaxis": 'Price'
 		}],
 		"layout": {
-			"title": df.name[0],
+			"title": ticker_info[0],
 			"dragmode": 'zoom', 
 			"margin": {
 				"r": 10, 
@@ -74,7 +83,7 @@ def graph(ticker):
 	# objects to their JSON equivalents
 	graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
-	return render_template("graph.html", tables = tables, ids = ids, graphJSON = graphJSON, name = df.name[0])
+	return render_template("graph.html", tables = tables, ids = ids, graphJSON = graphJSON, name = ticker_info[0], company = ticker_info[1])
 
 @app.route('/stock/<int:ticker>')
 def stock(ticker):
@@ -89,11 +98,10 @@ def stock(ticker):
 	ticker_info = select("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
 
 	return render_template("stock.html", table = price.to_html(classes='pure-table pure-table-bordered', index=False), info = ticker_info)
-	#return render_template("stock.html", info = ticker_info)
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html')
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
 	app.run(debug=True, port=8080)

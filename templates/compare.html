@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<h1>Compare</h1>
+	
+	<div>
+		<h3>comparing ticker {{data[0]}} and ticker {{data[1]}}</h3>
+		<!-- graph goes here, only if --> 
+		<!-- example: compare?compare1=AAPL&compare2=GOOGL -->
+	</div>
+
+	<form method="GET">
+		<div class="section">
+			<div class="pure-g">
+				<select class="pure-u-1-2" name="compare1" size="10">
+					{% for ticker in tickers %}
+						<option value={{ticker["id"]}}>{{ticker["name"]}} - {{ticker["company"]}}</option>
+					{% endfor %}
+				</select>
+				<select class="pure-u-1-2" name="compare2" size="10">
+					{% for ticker in tickers %}
+						<option value={{ticker["id"]}}>{{ticker["name"]}} - {{ticker["company"]}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<hr class="rule">
+			<div class="pure-g"><input type="submit" value="Compare" class="pure-button button-xlarge pure-u-1"></div>
+		</div>
+	</form>
+	
+{% endblock %}

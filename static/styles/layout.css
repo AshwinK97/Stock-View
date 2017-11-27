@@ -15,8 +15,7 @@ h1, h2 {
 	padding-top: 5%;
 }
 
-#footer-div {
-}
+#footer-div {}
 
 .section {
 	padding-bottom: 5%;
@@ -26,12 +25,9 @@ h1, h2 {
     border-collapse: collapse;
     width: 100%;
     margin: 5% auto;
-    counter-reset: rowNumber;
 }
 
-#stock-table tr {
-	counter-increment: rowNumber;
-}
+#stock-table tr {}
 
 #stock-table th, td {
     text-align: left;
@@ -48,15 +44,17 @@ h1, h2 {
     padding: 14px 16px;
     text-decoration: none;
 }
+
 #stock-table a:hover:not(.active) {
     background-color: #232f3e;
     color: white;
     text-decoration: none;
 }
+
 .rule {
     margin: 10px 0;
     border: none;
     height: 1.5px;
     background-image: -webkit-linear-gradient(left, #f0f0f0, #c9bbae, #f0f0f0);
     background-image: linear-gradient(left, #f0f0f0, #c9bbae, #f0f0f0);
-  }
+}

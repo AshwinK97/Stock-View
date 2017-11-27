@@ -1,39 +1,16 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-	<form action="/compare" method="GET">
-		<div class="section">
-			<h1>View Stocks</h1>
-
-			<table id="stock-table">
-				{% for row in rows %}
-					<tr>
-						<td>
-							<a href="/stock/{{row['id']}}">{{row["company"]}} - {{row["name"]}}</a>
-						</td>
-					</tr>
-				{% endfor %}
-			</table>
-		</div>
-		
-		<div class="section">
-			<div class="pure-g">
-				<select class="pure-u-1-2" name="compare-1">
-					{% for row in rows %}
-						<option value={{row["name"]}}>{{row["company"]}}</option>
-						{% endfor %}
-				</select>
-				<select class="pure-u-1-2" name="compare-2">
-					{% for row in rows %}
-						<option value={{row["name"]}}>{{row["company"]}}</option>
-					{% endfor %}
-				</select>
-			</div>
-			<hr class="rule">
-			<div class="pure-g">
-				<input type="button" value="Compare" class="pure-button button-xlarge pure-u-1">
-			</div>
-		</div>
-	</form>
-	
+	<div class="section">
+		<h1>View Stocks</h1>
+		<table id="stock-table" border="1" bordercolor="#cccccc">
+			{% for row in rows %}
+				<tr>
+					<td>
+						<a href="/stock/{{row['id']}}">{{row["company"]}} - {{row["name"]}}</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
 {% endblock %}
