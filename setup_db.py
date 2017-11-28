@@ -2,19 +2,19 @@ import sqlite3, urllib2
 
 # list of urls for api calls
 urls = [
-	'https://www.quandl.com/api/v1/datasets/WIKI/GOOGL.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/MSFT.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/AAPL.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/AMZN.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/NVDA.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/TSLA.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/INTC.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/IBM.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/CSCO.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/AMD.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/ORCL.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/QCOM.csv?rows=2000',
-	'https://www.quandl.com/api/v1/datasets/WIKI/HPQ.csv?rows=2000'
+	'https://www.quandl.com/api/v1/datasets/WIKI/GOOGL.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/MSFT.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/AAPL.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/AMZN.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/NVDA.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/TSLA.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/INTC.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/IBM.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/CSCO.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/AMD.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/ORCL.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/QCOM.csv?rows=100',
+	'https://www.quandl.com/api/v1/datasets/WIKI/HPQ.csv?rows=100'
 ]
 # list of prepared statements to execute queries
 queries = [
@@ -56,6 +56,21 @@ def setup_db():
 
 	# create tickers table if it does not already exist
 	conn.execute('CREATE TABLE if not exists Tickers ( id INT NOT NULL, name VARCHAR ( 45 ), company VARCHAR ( 45 ), PRIMARY KEY(id) )')
+	# add the tickers we are using for our project
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (1, 'GOOGL', 'Alphabet Inc Class A')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (2, 'MSFT', 'Microsoft Corporation')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (3, 'AAPL', 'Apple Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (4, 'AMZN', 'Amazon.com, Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (5, 'NVDA', 'NVIDIA Corporation')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (6, 'TSLA', 'Tesla Inc')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (7, 'INTC', 'Intel Corporation')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (8, 'IBM', 'IBM Common Stock')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (9, 'CSCO', 'Cisco Systems, Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (10, 'AMD', 'Advanced Micro Devices, Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (11, 'ORCL', 'Oracle Corporation')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (12, 'QCOM', 'QUALCOMM, Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (13, 'HPQ', 'Hewlett-Packard Inc.')''')
+
 	print "Tickers table - done"
 
 	# create prices table if it does not already exist
