@@ -34,7 +34,7 @@ queries = [
 ]
 
 # perform insert transaction
-def insert(url, query, cols):
+def insert(conn, url, query, cols):
 	csv = urllib2.urlopen(url).read().split('\n') # get csv from api
 	for i, row in enumerate(csv): # iterate through each row
 		if i == 0: # skip heading row
@@ -56,6 +56,21 @@ def setup_db():
 
 	# create tickers table if it does not already exist
 	conn.execute('CREATE TABLE if not exists Tickers ( id INT NOT NULL, name VARCHAR ( 45 ), company VARCHAR ( 45 ), PRIMARY KEY(id) )')
+	# add the tickers we are using for our project
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (1, 'GOOGL', 'Alphabet Inc Class A')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (2, 'MSFT', 'Microsoft Corporation')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (3, 'AAPL', 'Apple Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (4, 'AMZN', 'Amazon.com, Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (5, 'NVDA', 'NVIDIA Corporation')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (6, 'TSLA', 'Tesla Inc')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (7, 'INTC', 'Intel Corporation')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (8, 'IBM', 'IBM Common Stock')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (9, 'CSCO', 'Cisco Systems, Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (10, 'AMD', 'Advanced Micro Devices, Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (11, 'ORCL', 'Oracle Corporation')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (12, 'QCOM', 'QUALCOMM, Inc.')''')
+	conn.execute('''INSERT INTO Tickers (id, name, company) VALUES (13, 'HPQ', 'Hewlett-Packard Inc.')''')
+
 	print "Tickers table - done"
 
 	# create prices table if it does not already exist
@@ -76,7 +91,7 @@ def setup_db():
 
 	# preform each api call
 	for url, query in zip(urls, queries):
-		if insert(url, query, 7):
+		if insert(conn, url, query, 7):
 			print url, "- success"
 
 	conn.close()

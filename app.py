@@ -1,3 +1,8 @@
+# import setup
+from setup import setup
+setup() # run inital setup
+
+# import necessary packages
 from flask import Flask, render_template, request
 import sqlite3 as sql
 import json, plotly
@@ -5,11 +10,9 @@ import numpy as np
 import pandas as pd
 
 # file imports
-from setup import setup
 from plot import *
 from indicator import *
 
-# setup() # run initial setup
 app = Flask(__name__)
 
 # used to perform insert queries
@@ -17,11 +20,13 @@ def query(query, params):
 	con = sql.connect("db/database.db")
 	con.row_factory = sql.Row
 	cur = con.cursor()
-	try:
-		cur.execute(query, params)
-	 	return cur
-	except:
-	 	return "error: could not return cursor"
+	# try:
+	# 	cur.execute(query, params)
+	#  	return cur
+	# except:
+	#  	return "error: could not return cursor"
+	cur.execute(query, params)
+	return cur
 
 # Page routes
 @app.route('/')
@@ -218,4 +223,4 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 if __name__ == '__main__':
-	app.run(debug=True, port=8080)
+	app.run(port=8080)

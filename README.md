@@ -1,18 +1,6 @@
 # SOFE3700 Final Project
 This repository contains files for the data management systems final project.
 
-## TODO
-* [ ] Complete 2 - 3 more views
-  * [x] finish compare view with graph
-  * [ ] add date select form for graph view
-  * [ ] add indiciaters for specified ticker
-* [x] Seperate app.py into multiple files
-  * [x] Place ploting procedures in functions within seperate files
-  * [x] Place sql procedures in functions
-* [x] Create API
-  * [x] request stock data within a specific date range
-  * [x] request specific date and columns
-
 ## Overview
 This project will provide stock information for various companies within the last 10 years. This will be used to help analyze the price of a company's stock over a period of time. Using this data, users can analyze and predict future trends for a specific company, and make comparisons between multiple companies.
 
@@ -22,8 +10,8 @@ This project will provide stock information for various companies within the las
 * Make sure you have a recent version of pip installed and it is added to your `$PATH`
 * Open a terminal and `cd` into the project directory 
 * Run the command `python app.py` to start the server
-* The setup can take up to 5-10 minutes the first time
-* The setup will make the necessary API calls and create a SQLite database under `db/database.db`
+* If you do not already have a database.db file, the setup will make the necessary API calls and create a SQLite database under `db/database.db`
+* This process can take up to 30 minutes depending on your internet connection
 * The setup will then make sure you have the following python packages installed
   * Flask
   * sqlite3
@@ -69,6 +57,18 @@ The stock page shows a list of entries sorted by date for a specified `ticker_id
 http://localhost:8080/graph/<ticker_id>
 ```
 The graph page shows a candlestick plot of the last 500 rows of data for the specified `ticker_id`. The candlestick will show increases and decreases in the stock value, as well as the individual numerical values for each point. The plot has many functions such as zooming, panning and selecting values. You can also export the plot as a .png, or upload it the cloud to edit it as a spread sheet.
+
+#### Graph with volume
+```
+http://localhost:8080/graph/<ticker_id>?Volume=on
+```
+This page will contain the candlestick plot for the specified stock as well a graph of the volume data for that stock. The volume graph will have all of the same features as the above graph.
+
+#### Graph date range
+```
+http://localhost:8080/graph/<ticker_id>?date_start=<date-start>&date_end=<date_end>
+```
+This page will contain the candlestick plot for the specifeid stock but it will be narrowed down to only the information within the specified dates.
 
 #### Compare form
 ```
