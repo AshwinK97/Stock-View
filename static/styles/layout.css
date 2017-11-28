@@ -7,6 +7,10 @@ h1, h2 {
 	margin-left: 2%;
 }
 
+.about a {
+    color: beige;
+}
+
 #nav-div {}
 
 #wrapper-div {
