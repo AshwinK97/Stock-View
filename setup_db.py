@@ -34,7 +34,7 @@ queries = [
 ]
 
 # perform insert transaction
-def insert(url, query, cols):
+def insert(conn, url, query, cols):
 	csv = urllib2.urlopen(url).read().split('\n') # get csv from api
 	for i, row in enumerate(csv): # iterate through each row
 		if i == 0: # skip heading row
@@ -76,7 +76,7 @@ def setup_db():
 
 	# preform each api call
 	for url, query in zip(urls, queries):
-		if insert(url, query, 7):
+		if insert(conn, url, query, 7):
 			print url, "- success"
 
 	conn.close()
