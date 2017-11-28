@@ -2,19 +2,19 @@ import sqlite3, urllib2
 
 # list of urls for api calls
 urls = [
-	'https://www.quandl.com/api/v1/datasets/WIKI/GOOGL.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/MSFT.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/AAPL.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/AMZN.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/NVDA.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/TSLA.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/INTC.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/IBM.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/CSCO.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/AMD.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/ORCL.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/QCOM.csv?rows=100',
-	'https://www.quandl.com/api/v1/datasets/WIKI/HPQ.csv?rows=100'
+	'https://www.quandl.com/api/v1/datasets/WIKI/GOOGL.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/MSFT.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/AAPL.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/AMZN.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/NVDA.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/TSLA.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/INTC.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/IBM.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/CSCO.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/AMD.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/ORCL.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/QCOM.csv?rows=2000',
+	'https://www.quandl.com/api/v1/datasets/WIKI/HPQ.csv?rows=2000'
 ]
 # list of prepared statements to execute queries
 queries = [

@@ -62,7 +62,13 @@ The graph page shows a candlestick plot of the last 500 rows of data for the spe
 ```
 http://localhost:8080/graph/<ticker_id>?Volume=on
 ```
-This page will contain the candlestick plot for the specified
+This page will contain the candlestick plot for the specified stock as well a graph of the volume data for that stock. The volume graph will have all of the same features as the above graph.
+
+#### Graph date range
+```
+http://localhost:8080/graph/<ticker_id>?date_start=<date-start>&date_end=<date_end>
+```
+This page will contain the candlestick plot for the specifeid stock but it will be narrowed down to only the information within the specified dates.
 
 #### Compare form
 ```
