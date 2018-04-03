@@ -4,29 +4,16 @@ setup() # run inital setup
 
 # import necessary packages
 from flask import Flask, render_template, request
-import sqlite3 as sql
+# import sqlite3 as sql
 import json, plotly
 import numpy as np
 import pandas as pd
 
 # file imports
-from plot import *
+from request import *
 from indicator import *
 
 app = Flask(__name__)
-
-# used to perform insert queries
-def query(query, params):
-	con = sql.connect("db/database.db")
-	con.row_factory = sql.Row
-	cur = con.cursor()
-	# try:
-	# 	cur.execute(query, params)
-	#  	return cur
-	# except:
-	#  	return "error: could not return cursor"
-	cur.execute(query, params)
-	return cur
 
 # Page routes
 @app.route('/')
@@ -45,29 +32,21 @@ def api_info():
 def compare():
 	visible, title = "invisible", ""
 	ids, graphJSON = [], []
+
 	if len(request.args) == 3:
+		# Setup cursors from db queries for data
 		ticker1_cur = query('select date, {} from Prices where ticker_id = ?'.format(request.args.get('attr')), [request.args.get('compare1')])
 		ticker2_cur = query('select date, {} from Prices where ticker_id = ?'.format(request.args.get('attr')), [request.args.get('compare2')])
 		names_cur = query('select id, name from tickers where id = ? or id = ?', [request.args.get('compare1'), request.args.get('compare2')])
 		
-		names_df = pd.DataFrame(names_cur.fetchall())
-		names_df.columns = list(map(lambda col: col[0], names_cur.description))
-		names_df.set_index('id', inplace=True)
+		# Create dataframes out of queried data
+		names_df = setup_df(names_cur, index=True)
+		ticker1_df = setup_df(ticker1_cur)
+		ticker2_df = setup_df(ticker2_cur)
 
-		ticker1_df = pd.DataFrame(ticker1_cur.fetchall())
-		ticker1_df.columns = list(map(lambda col: col[0], ticker1_cur.description))
-
-		ticker2_df= pd.DataFrame(ticker2_cur.fetchall())
-		ticker2_df.columns = list(map(lambda col: col[0], ticker2_cur.description))
-
-		if request.args.get('attr') == 'volume':
-			ticker1_data = bar(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
-			ticker2_data = bar(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
-		else:
-			ticker1_data = line(names_df.name[int(request.args.get('compare1'))], ticker1_df.date, ticker1_df[request.args.get('attr')])
-			ticker2_data = line(names_df.name[int(request.args.get('compare2'))], ticker2_df.date, ticker2_df[request.args.get('attr')])
-
-		data = [ticker1_data, ticker2_data]
+		# Checks for a volume attr
+		# returns a line display, else a candlestick
+		data = is_volume(request.args, [names_df, ticker1_df, ticker2_df])
 
 		date = [ticker1_df.date.tolist()[0], ticker1_df.date.tolist()[-1]]
 		
@@ -76,7 +55,7 @@ def compare():
 			"layout": layout(date)
 		}]
 
-		ids = ['graph-{}'.format(i) for i, _ in enumerate(graphs)]
+		ids = get_ids(graphs)
 
 		# Convert the figures to JSON
 		# PlotlyJSONEncoder appropriately converts pandas, datetime, etc
@@ -100,13 +79,12 @@ def graph(ticker):
 		where Prices.ticker_id = ? order by price_id ASC limit 500''', [ticker]
 	)
 
-	rows = cur.fetchall();
-	# if no rows returned, page not found
-	if len(rows) == 0:
-		return render_template('404.html')
+	# Setup dataframe
+	df = setup_df(cur)
 
-	df = pd.DataFrame(rows)
-	df.columns = list(map(lambda col: col[0], cur.description))
+	# if no rows returned, page not found
+	if df.empty:
+		return render_template('404.html')
 
 	# get absolute date range
 	date = [df.date.tolist()[-1], df.date.tolist()[0]]
@@ -114,11 +92,6 @@ def graph(ticker):
 	# if parameters were given
 	if(request.args.get('date_start') != None):
 			date = [request.args.get('date_start'), request.args.get('date_end')]
-
-			#graphs.append({
-			#	"data": volume,
-			#	"layout": layout(date, showlegend=False)
-			#})
 
 	# get candlestick plot data
 	plot_candlestick = candlestick(df.date.tolist(), df.open.tolist(), df.close.tolist(), df.high.tolist(), df.low.tolist())
@@ -137,7 +110,7 @@ def graph(ticker):
 			})
 
 	# Add "ids" to each of the graphs to pass up to the client for templating
-	ids = ['{}'.format(i) for i, _ in enumerate(graphs)]
+	ids = get_ids(graphs)
 
 	# Convert the figures to JSON
 	graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
@@ -153,15 +126,15 @@ def stock(ticker, page):
 	)
 	ticker_info = query("select id, name, company from Tickers where id = ?", [ticker]).fetchone()
 	
+	# Setup df
+	price = setup_df(price_select_all)
+
 	# if no rows returned, page not found
-	price_rows = price_select_all.fetchall()
-	if len(price_rows) == 0:
+	if price.empty:
 		return render_template('404.html'), 404
 
 	# Create dataframe from query and convert to html table
-	price_columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
-	price = pd.DataFrame(price_rows)
-	price.columns = price_columns
+	price.columns = list(map(lambda col: col[0].title().replace('_', ''), price_select_all.description))
 	table = price.to_html(classes='pure-table pure-table-bordered', index=False)
 
 	return render_template("stock.html", table = table, info = ticker_info, page = page+1)
@@ -180,33 +153,14 @@ def api(ticker_name):
 	# if parameters were given
 	if len(request.args) != 0:
 		# column was specified
-		if request.args.get('col') == 'date':
-			string = '''select Prices.date from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
-		elif request.args.get('col') == 'open':
-			string = '''select Prices.open from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
-		elif request.args.get('col') == 'high':
-			string = '''select Prices.high from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
-		elif request.args.get('col') == 'low':
-			string = '''select Prices.low from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
-		elif request.args.get('col') == 'close':
-			string = '''select Prices.close from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
-		elif request.args.get('col') == 'volume':
-			string = '''select Prices.volume from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''
-
-		# start date was specified
-		if request.args.get('date-start'):
-			string += " and Prices.date >= ?"
-			params.append(request.args.get('date-start'))
+		col = request.args.get('col')
 		
-		# end date was specified
-		if request.args.get('date-end'):
-			string += " and Prices.date <= ?"
-			params.append(request.args.get('date-end'))
+		if col == None:
+			col = 'close'
 
-		# row limit was specified
-		if request.args.get('rows'):
-			string += " limit ?"
-			params.append(request.args.get('rows'))
+		string = '''select Prices.{} from Prices where Prices.ticker_id = (select tickers.id from Tickers where name = ?)'''.format(col)
+
+		string = setup_api_query(string, request.args, params)
 
 	# execute constructed query with specified parameters
 	data = query(string, params).fetchall()
