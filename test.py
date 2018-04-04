@@ -56,7 +56,7 @@ def log_test(name, expected, parameters, actual):
 
   if(result):
     result = "Passed\n"
-    test_passed += 1
+    set_test_passed(test_passed+1)
   else:
     result = "Failed\n"
 
@@ -73,7 +73,7 @@ def log_test(name, expected, parameters, actual):
   test_log.write("Actual: {}\n".format(actual))
   test_log.write("Result: {}{}\n\n".format(result, '-'*8))
 
-  test_number += 1
+  set_test_number(test_number+1)
 
 # Summarize all tests
 def summarize_tests():

@@ -1,9 +1,27 @@
-[1/1]: Testing ask_player() with Parameters (5, 76, 54, 99, 45, Date, Price)
-Expected: {'x': 5, 'open': 54, 'close': 76, 'high': 99, 'low': 45, 'type': 'candlestick', 'xaxis': 'Date', 'yaxis': 'Price'}
-Actual: {'x': 5, 'open': 54, 'close': 76, 'high': 99, 'low': 45, 'type': 'candlestick', 'xaxis': 'Date', 'yaxis': 'Price'}
+[1/4]: Testing candlestick() with Parameters (13, 58, 58, 6, 32, Date, Price)
+Expected: {'x': 13, 'open': 58, 'close': 58, 'high': 6, 'low': 32, 'type': 'candlestick', 'xaxis': 'Date', 'yaxis': 'Price'}
+Actual: {'x': 13, 'open': 58, 'close': 58, 'high': 6, 'low': 32, 'type': 'candlestick', 'xaxis': 'Date', 'yaxis': 'Price'}
 Result: Passed
 --------
 
-Tests Ran: 1
-Successful Runs: 1/1
-Failed Runs: 0/1
+[2/4]: Testing bar() with Parameters (Testing Set, 13, 75)
+Expected: {'x': 13, 'y': 75, 'name': 'Testing Set', 'type': 'bar'}
+Actual: {'x': 13, 'y': 75, 'name': 'Testing Set', 'type': 'bar'}
+Result: Passed
+--------
+
+[3/4]: Testing line() with Parameters (Testing Set, 13, 75, #17BECF)
+Expected: {'type': 'scatter', 'mode': 'lines', 'name': 'Testing Set', 'x': 13, 'y': 75, 'line': {'#17BECF': '#17BECF'}}
+Actual: {'type': 'scatter', 'mode': 'lines', 'name': 'Testing Set', 'x': 13, 'y': 75, 'line': {'#17BECF': '#17BECF'}}
+Result: Passed
+--------
+
+[4/4]: Testing layout() with Parameters ([], True)
+Expected: {'dragmode': 'turntable', 'margin': {'r': 10, 't': 25, 'b': 40, 'l': 60}, 'showlegend': True, 'legend': {'orientation': 'h'}, 'xaxis': {'autorange': False, 'domain': [0, 1], 'range': [], 'type': 'date'}, 'yaxis': {'autorange': True, 'rangemode': 'normal', 'type': 'linear'}}
+Actual: {'dragmode': 'turntable', 'margin': {'r': 10, 't': 25, 'b': 40, 'l': 60}, 'showlegend': True, 'legend': {'orientation': 'h'}, 'xaxis': {'autorange': False, 'domain': [0, 1], 'range': [], 'type': 'date'}, 'yaxis': {'autorange': True, 'rangemode': 'normal', 'type': 'linear'}}
+Result: Passed
+--------
+
+Tests Ran: 4
+Successful Runs: 4/4
+Failed Runs: 0/4
