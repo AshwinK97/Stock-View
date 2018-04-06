@@ -1,0 +1,11 @@
+# Python requirements to run this program
+# Use `pip install -r requirements.txt`
+
+json
+plotly
+numpy
+pandas
+random
+sqlite3
+urllib2
+flask
